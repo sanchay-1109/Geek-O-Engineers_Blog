@@ -1,0 +1,12 @@
+{
+    "parameters":
+    {
+        "local_server":"True",
+        "local_uri":"mysql://root:@localhost/geekoengineers2",
+        "prod_uri":"mysql://root:@localhost/geekoengineers2",
+        "fb_url":"https://facebook.com/geekoengineers",
+        "tw_url":"https://twitter.com/geekoengineers",
+        "gh_url":"https://github.com/geekoengineers",
+        "blog_name":"Geek'O'Engineers"
+    }
+}
