@@ -11,6 +11,16 @@ with open('templates\config.json','r') as c:
 
 
 app = Flask(__name__)
+app.config.update()
+{
+    'MAIL_SERVER': 'smtp.gmail.com',
+    'MAIL_PORT': 465,
+    'MAIL_USE_SSL': True,
+    'MAIL_USERNAME': parameters['gmail_user'],
+    'MAIL_PASSWORD': parameters['gmail_password']
+}
+mail=Mail(app)
+
 if(local_server):
     app.config['SQLALCHEMY_DATABASE_URI'] = parameters['local_uri']
 else:
@@ -47,6 +57,12 @@ def contact():
         entry=Contacts(name=name,email=email,phone_no=phone_no,date= datetime.now(),message=message)
         db.session.add(entry)
         db.session.commit()
+        mail.send_message('New message from ' + name,
+                          sender=email,
+                          recipients=[parameters['gmail_user']],
+                          # the recipients is always a list so write in square brackets
+                          body="Name : "+name+"\n"+"Email : "+email+"\n"+"Phone Number : "+phone_no+"\n"+"Message : "+message
+                          )
     return render_template('contact.html',parameters=parameters)           
 
 app.run(debug=True)    
