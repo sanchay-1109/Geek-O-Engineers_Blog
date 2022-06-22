@@ -35,6 +35,13 @@ class Contacts(db.Model):
     phone_no = db.Column(db.String(12),nullable=False)
     message = db.Column(db.String(120),nullable=False)
     date = db.Column(db.String(12),nullable=False)
+class Posts(db.Model):
+    sno = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(80), nullable=False)
+    slug = db.Column(db.String(21), nullable=False)
+    content = db.Column(db.String(120), nullable=False)
+    date = db.Column(db.String(12), nullable=True)
+    # img_file = db.Column(db.String(12), nullable=True)    
 
 @app.route("/")
 def home():
@@ -64,5 +71,12 @@ def contact():
                           body="Name : "+name+"\n"+"Email : "+email+"\n"+"Phone Number : "+phone_no+"\n"+"Message : "+message
                           )
     return render_template('contact.html',parameters=parameters)           
+
+
+@app.route("/post/<string:post_slug>", methods=['GET'])
+def post(post_slug):
+    post=Posts.query.filter_by(slug=post_slug).first()
+
+    return render_template('post.html',parameters=parameters,post=post)
 
 app.run(debug=True)    
