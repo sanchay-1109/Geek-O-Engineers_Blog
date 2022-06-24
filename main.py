@@ -53,6 +53,13 @@ def home():
 def about():
     return render_template('about.html',parameters=parameters)
 
+@app.route("/dashboard",methods=['GET','POST'])
+def dashboard():
+    if request.method=='POST':
+        pass
+    else:
+        return render_template('login.html',parameters=parameters,)    
+
 @app.route("/contact", methods=['GET','POST'])
 def contact():
 

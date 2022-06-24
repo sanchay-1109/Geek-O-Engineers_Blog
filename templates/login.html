@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/signin.css')}}">
+    </head>
+    <body>
+       <h1 id="heading1">Admin Panel</h1>
+       <img src="https://img.icons8.com/cute-clipart/344/login-rounded-right.png" alt="Login Logo" style="width:100px; height:100px;">
+     <div>
+         <form action="/dashboard" class="myForm" name="myForm" method="post">
+             <div class="input-container">
+                 <i class="fa fa-envelope icon"></i>
+                 <input type="email" placeholder="Email" name="email" class="input-field" required>
+             </div>
+             <div class="input-container">
+                <i class="fa fa-key icon"></i>
+                <input type="password" placeholder="Password" name="password" class="input-field"  required>
+               </div>
+               <div class="checkbox mb-3">
+                <label>
+                  <input type="checkbox" value="remember-me"> Remember me
+                </label>
+              </div>
+              <b>
+            <div><input type="submit" class="bttn">
+              <p class="mt-5 mb-3 text-muted ">&copy; {{parameters['blog_name']}}</p>
+            </div>
+         </form>
+     </div>
+    </body>
+</html>
