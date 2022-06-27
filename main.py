@@ -57,7 +57,7 @@ def about():
 @app.route("/dashboard")
 def dashboard():
     if "user" in session and session['user']==parameters['admin_user']:
-        posts = Posts.query.all()
+        posts = Posts.querry.all()
         return render_template("dashboard.html", parameters=parameters, posts=posts)
 
     if request.method=="POST":
