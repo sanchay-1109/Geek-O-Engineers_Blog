@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request ,session
+from flask import Flask, render_template, request ,session ,redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 import json
@@ -54,10 +54,10 @@ def home():
 def about():
     return render_template('about.html',parameters=parameters)
 
-@app.route("/dashboard")
+@app.route("/dashboard", methods=['GET','POST'])
 def dashboard():
     if "user" in session and session['user']==parameters['admin_user']:
-        posts = Posts.querry.all()
+        posts = Posts.query.all()
         return render_template("dashboard.html", parameters=parameters, posts=posts)
 
     if request.method=="POST":
@@ -66,10 +66,52 @@ def dashboard():
         if username==parameters['admin_user'] and userpass==parameters['admin_password']:
             # set the session variable
             session['user']=username
-            posts = Posts.querry.all()
+            posts = Posts.query.all()
             return render_template("dashboard.html", parameters=parameters, posts=posts)
     else:
-        return render_template("login.html", parameters=parameters)    
+        return render_template("login.html", parameters=parameters)  
+
+@app.route("/edit/<string:sno>", methods=['GET','POST'])
+def edit(sno):
+    if "user" in session and session['user']==parameters['admin_user']:
+        if request.method=='POST':
+            box_title=request.form.get('title')
+            tagline = request.form.get('tagline')
+            slug = request.form.get('slug')
+            content = request.form.get('content')
+            date = datetime.now()
+
+            if sno=='0':
+              post = Posts(title=box_title, slug=slug, content=content, tagline=tagline, date=date)
+              db.session.add(post)
+              db.session.commit() 
+            else:
+              post = Posts.query.filter_by(sno=sno).first()
+              post.box_title = box_title
+              post.tline = tagline
+              post.slug = slug
+              post.content = content
+              post.date = date
+              db.session.commit()
+            return redirect('/edit/'+sno)
+
+        post = Posts.query.filter_by(sno=sno).first()     
+
+        return render_template('edit.html',parameters=parameters,post=post) 
+
+@app.route('/logout')
+def logout():
+    session.pop('user')
+    return redirect('/dashboard')
+
+@app.route("/delete/<string:sno>" , methods=['GET', 'POST'])
+def delete(sno):
+    if "user" in session and session['user']==parameters['admin_user']:
+        post = Posts.query.filter_by(sno=sno).first()
+        db.session.delete(post)
+        db.session.commit()
+    return redirect("/dashboard")
+
 
 @app.route("/contact", methods=['GET','POST'])
 def contact():
