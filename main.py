@@ -73,33 +73,31 @@ def dashboard():
     else:
         return render_template("login.html", parameters=parameters)  
 
-@app.route("/edit/<string:sno>", methods=['GET','POST'])
+@app.route("/edit/<string:sno>", methods = ['GET', 'POST'])
 def edit(sno):
-    if "user" in session and session['user']==parameters['admin_user']:
-        if request.method=='POST':
-            box_title=request.form.get('title')
+    if ('user' in session and session['user'] == parameters['admin_user']):
+        if request.method == 'POST':
+            box_title = request.form.get('title')
             tagline = request.form.get('tagline')
             slug = request.form.get('slug')
             content = request.form.get('content')
             date = datetime.now()
 
             if sno=='0':
-              post = Posts(title=box_title, slug=slug, content=content, tagline=tagline, date=date)
+              post = Posts(title=box_title, slug=slug, content=content, tagline=tagline,date=date)
               db.session.add(post)
-              db.session.commit() 
-            else:
-              post = Posts.query.filter_by(sno=sno).first()
-              post.box_title = box_title
-              post.tline = tagline
-              post.slug = slug
-              post.content = content
-              post.date = date
               db.session.commit()
-              return redirect('/edit/'+sno)
-
-        post = Posts.query.filter_by(sno=sno).first()     
-
-        return render_template('edit.html',parameters=parameters,post=post) 
+            else:
+                post = Posts.query.filter_by(sno=sno).first()
+                post.title = box_title
+                post.slug = slug
+                post.content = content
+                post.tagline = tagline
+                post.date = date
+                db.session.commit()
+                return redirect('/edit/'+sno)
+    post = Posts.query.filter_by(sno=sno).first()
+    return render_template('edit.html', parameters=parameters, post=post, sno=sno) 
 
 @app.route('/logout')
 def logout():
